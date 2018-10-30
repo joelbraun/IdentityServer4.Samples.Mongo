@@ -55,12 +55,18 @@ namespace QuickstartIdentityServer
 
             // ---  configure identity server with MONGO Repository for stores, keys, clients and scopes ---
             services.AddIdentityServer()
-                .AddTemporarySigningCredential()
                 .AddMongoRepository()
                 .AddClients()
                 .AddIdentityApiResources()
                 .AddPersistedGrants()
                 .AddTestUsers(Config.GetUsers());
+
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                options.ClientId = "434483408261-55tc8n0cs4ff1fe21ea8df2o443v2iuc.apps.googleusercontent.com";
+                options.ClientSecret = "3gcoTrEDPPJ0ukn_aYYT6PWo";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -70,16 +76,6 @@ namespace QuickstartIdentityServer
             app.UseDeveloperExceptionPage();
 
             app.UseIdentityServer();
-
-            app.UseGoogleAuthentication(new GoogleOptions
-            {
-                AuthenticationScheme = "Google",
-                DisplayName = "Google",
-                SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme,
-
-                ClientId = "434483408261-55tc8n0cs4ff1fe21ea8df2o443v2iuc.apps.googleusercontent.com",
-                ClientSecret = "3gcoTrEDPPJ0ukn_aYYT6PWo"
-            });
 
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();

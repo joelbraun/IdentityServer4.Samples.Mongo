@@ -15,10 +15,10 @@ namespace IdentityServer4.Quickstart.UI
         public static bool ShowLogoutPrompt = true;
         public static bool AutomaticRedirectAfterSignOut = false;
 
-        public static bool WindowsAuthenticationEnabled = true;
-        // specify the Windows authentication schemes you want to use for authentication
-        public static readonly string[] WindowsAuthenticationSchemes = new string[] { "Negotiate", "NTLM" };
-        public static readonly string WindowsAuthenticationDisplayName = "Windows";
+        // specify the Windows authentication scheme being used
+        public static readonly string WindowsAuthenticationSchemeName = Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme;
+        // if user uses windows auth, should we load the groups from windows
+        public static bool IncludeWindowsGroups = false;
 
         public static string InvalidCredentialsErrorMessage = "Invalid username or password";
     }

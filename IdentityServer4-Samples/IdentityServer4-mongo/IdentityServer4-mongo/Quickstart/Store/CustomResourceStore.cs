@@ -58,5 +58,10 @@ namespace QuickstartIdentityServer.Quickstart.Store
         {
             return predicate;
         }
+
+        public Task<Resources> GetAllResourcesAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -46,26 +46,12 @@ namespace IdentityServer4.Quickstart.UI
             var schemes = _httpContextAccessor.HttpContext.Authentication.GetAuthenticationSchemes();
 
             var providers = schemes
-                .Where(x => x.DisplayName != null && !AccountOptions.WindowsAuthenticationSchemes.Contains(x.AuthenticationScheme))
+                .Where(x => x.DisplayName != null)
                 .Select(x => new ExternalProvider
                 {
                     DisplayName = x.DisplayName,
                     AuthenticationScheme = x.AuthenticationScheme
                 }).ToList();
-
-            if (AccountOptions.WindowsAuthenticationEnabled)
-            {
-                // this is needed to handle windows auth schemes
-                var windowsSchemes = schemes.Where(s => AccountOptions.WindowsAuthenticationSchemes.Contains(s.AuthenticationScheme));
-                if (windowsSchemes.Any())
-                {
-                    providers.Add(new ExternalProvider
-                    {
-                        AuthenticationScheme = AccountOptions.WindowsAuthenticationSchemes.First(),
-                        DisplayName = AccountOptions.WindowsAuthenticationDisplayName
-                    });
-                }
-            }
 
             var allowLocal = true;
             if (context?.ClientId != null)
@@ -104,7 +90,7 @@ namespace IdentityServer4.Quickstart.UI
         {
             var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
 
-            var user = await _httpContextAccessor.HttpContext.GetIdentityServerUserAsync();
+            var user = _httpContextAccessor.HttpContext.User;
             if (user == null || user.Identity.IsAuthenticated == false)
             {
                 // if the user is not authenticated, then just show logged out page
@@ -139,7 +125,7 @@ namespace IdentityServer4.Quickstart.UI
                 LogoutId = logoutId
             };
 
-            var user = await _httpContextAccessor.HttpContext.GetIdentityServerUserAsync();
+            var user = _httpContextAccessor.HttpContext.User;
             if (user != null)
             {
                 var idp = user.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;

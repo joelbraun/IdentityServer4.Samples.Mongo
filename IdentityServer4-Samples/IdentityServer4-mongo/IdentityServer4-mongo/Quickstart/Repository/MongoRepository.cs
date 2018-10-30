@@ -19,6 +19,7 @@ namespace QuickstartIdentityServer.Quickstart.Repository
     {
         protected static IMongoClient _client;
         protected static IMongoDatabase _database;
+        private const string dbNamespace = "joel-braun-";
 
         /// <summary>
         /// This Contructor leverages  .NET Core built-in DI
@@ -37,7 +38,7 @@ namespace QuickstartIdentityServer.Quickstart.Repository
 
         public IQueryable<T> All<T>() where T : class, new()
         {
-            return _database.GetCollection<T>(typeof(T).Name).AsQueryable();
+            return _database.GetCollection<T>(dbNamespace + typeof(T).Name).AsQueryable();
         }
 
         public IQueryable<T> Where<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression) where T : class, new()
@@ -47,7 +48,7 @@ namespace QuickstartIdentityServer.Quickstart.Repository
 
         public void Delete<T>(System.Linq.Expressions.Expression<Func<T, bool>> predicate) where T : class, new()
         {
-            var result = _database.GetCollection<T>(typeof(T).Name).DeleteMany(predicate);
+            var result = _database.GetCollection<T>(dbNamespace + typeof(T).Name).DeleteMany(predicate);
 
         }
         public T Single<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression) where T : class, new()
@@ -57,7 +58,7 @@ namespace QuickstartIdentityServer.Quickstart.Repository
 
         public bool CollectionExists<T>() where T : class, new()
         {
-            var collection = _database.GetCollection<T>(typeof(T).Name);
+            var collection = _database.GetCollection<T>(dbNamespace + typeof(T).Name);
             var filter = new BsonDocument();
             var totalCount = collection.Count(filter);
             return (totalCount > 0) ? true : false;
@@ -66,12 +67,12 @@ namespace QuickstartIdentityServer.Quickstart.Repository
 
         public void Add<T>(T item) where T : class, new()
         {
-            _database.GetCollection<T>(typeof(T).Name).InsertOne(item);
+            _database.GetCollection<T>(dbNamespace + typeof(T).Name).InsertOne(item);
         }
 
         public void Add<T>(IEnumerable<T> items) where T : class, new()
         {
-            _database.GetCollection<T>(typeof(T).Name).InsertMany(items);
+            _database.GetCollection<T>(dbNamespace + typeof(T).Name).InsertMany(items);
         }
 
 
